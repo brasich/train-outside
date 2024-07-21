@@ -12,12 +12,6 @@ tt.get_train_data()
 amtrak_df = tt.get_denver_train_df()
 print('done')
 
-print('RTD:')
-print(rtd_df)
-
-print('Amtrak:')
-print(amtrak_df)
-
 print('getting RTD position updates')
 time.sleep(15)
 new_positions = refresh_vehicles()
@@ -29,11 +23,10 @@ position_comparison.loc[(position_comparison['distance_new'] < 0.2) & (position_
 position_comparison.loc[(position_comparison['distance_new'] > 0.2) & (position_comparison['distance_old'] < 0.2), 'status'] = 'departing'
 position_comparison.loc[(position_comparison['distance_new'] > 0.2) & (position_comparison['distance_old'] > 0.2), 'status'] = 'away'
 
-updates = position_comparison[position_comparison['status'].isin(['arriving', 'departing', 'at station'])]
-if len(updates) > 0:
-    print(time.time())
-    print(updates)
+rtd_display = position_comparison.sort_values('distance_new')[['route_id', 'distance_new', 'vehicle_update_seconds_ago_new', 'status']].rename({'route_id': 'route', 'distance_new': 'distance', 'vehicle_update_seconds_ago_new': 'update_age'})
 
-else:
-    print('no trains at station')
-    print(position_comparison)
+print(rtd_display)
+
+amtrak_display = amtrak_df[['train_num', 'dest', 'origin', 'velocity', 'status', 'actual_arrival', 'scheduled_arrival', 'estimated_arrival', 'actual_departure', 'scheduled_departure', 'estimated_departure']].sort_values('scheduled_arrival')
+
+print(amtrak_display)
