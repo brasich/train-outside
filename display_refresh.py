@@ -3,6 +3,7 @@ from amtrak import TrainTracker
 import time
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
+import datetime
 
 rtd_df = refresh_vehicles()
 tt = TrainTracker()
@@ -63,6 +64,7 @@ with open('index.html', 'w') as f:
                 </head>
                 <body>
                 """)
+    f.write(f"Last Update: {datetime.datetime.today().strftime('%c')}")
     f.writelines(amtrak_display[['train_num', 'dest', 'velocity', 'status', 'relevant_datetime']].to_html(index=False))
     f.write('<br>')
     f.writelines(rtd_display.to_html(index=False))
