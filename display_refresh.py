@@ -1,17 +1,16 @@
 from rtd import refresh_vehicles
 from amtrak import TrainTracker
-import time
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 import datetime
 
-rtd_df = refresh_vehicles()
+rtd_df = pd.read_json('hist_positions.json')
 tt = TrainTracker()
 tt.get_train_data()
 amtrak_df = tt.get_denver_train_df()
 
-time.sleep(15)
 new_positions = refresh_vehicles()
+new_positions.to_json('hist_positions.json')
 
 position_comparison = new_positions[['vehicle_label', 'route_id', 'distance', 'vehicle_update_seconds_ago']].merge(rtd_df[['vehicle_label', 'distance', 'vehicle_update_seconds_ago']], on='vehicle_label', suffixes=['_new', '_old'], how='left').fillna(9999)
 position_comparison['status'] = None
