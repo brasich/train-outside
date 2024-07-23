@@ -1,6 +1,5 @@
 frames/
 vehicle_positions_hist/
-*.txt
 *.mp4
 datetime
 folium.html
